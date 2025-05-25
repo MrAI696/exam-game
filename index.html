@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exam Game</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    #game-screen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .hidden { display: none !important; }
+    .visible { display: block !important; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <aside id="sidebar">
+      <img id="sidebar-avatar" src="" alt="avatar" />
+      <div id="sidebar-buttons">
+        <h2 data-i18n="settings">⚙️ Settings</h2>
+        <button type="button" onclick="toggleLanguage()">🌐 <span data-i18n="language">Language</span></button>
+        <button type="button" onclick="openProfile()">👤 <span data-i18n="profile">Profile</span></button>
+        <button type="button" onclick="resetProgress()">♻️ <span data-i18n="reset_progress">Reset Progress</span></button>
+      </div>
+    </aside>
+
+    <main id="main-content">
+      <div id="main-menu">
+        <div id="tab-buttons" class="tab-buttons">
+          <button id="tab-exams" class="active" type="button"> 📝 <span data-i18n="exams">Exams</span></button>
+          <button id="tab-bookmarks" type="button">🔖 <span data-i18n="bookmarks">Bookmarks</span></button>
+          <button id="tab-profile" type="button">👤 <span data-i18n="profile">Profile</span></button>
+        </div>
+
+        <div id="exams-tab" class="tab-content active">
+          <div class="exams-header">
+            <h2 id="exams-title" data-i18n="exams_title">Exams</h2>
+          </div>
+          <div id="exam-list" class="exam-grid scroll-box"></div>
+        </div>
+
+        <div id="bookmarks-tab" class="tab-content">
+          <h2 id="bookmarks-title" data-i18n="bookmarks_title">🔖 Bookmarked Questions</h2>
+          <div id="bookmark-list" class="bookmark-grid scroll-box"></div>
+        </div>
+
+        <div id="profile-tab" class="tab-content profile-tab-modern">
+          <p class="player-name">
+            <strong data-i18n="name_label">Name:</strong> <span id="profile-name-display"></span>
+          </p>
+          <img id="profile-avatar-preview" class="profile-avatar-modern" src="" alt="avatar" />
+
+          <div class="profile-stats-grid">
+            <div class="stat-card">📘 <span data-i18n="exams_completed">Exams Completed</span> <span id="profile-exams">0</span></div>
+            <div class="stat-card">❓ <span data-i18n="questions_answered">Questions Answered</span> <span id="profile-questions">0</span></div>
+            <div class="stat-card">📊 <span data-i18n="average_score">Average Score</span> <span id="profile-average">0</span></div>
+            <div class="stat-card">⏱ <span data-i18n="time_spent">Time Spent</span> <span id="profile-time">0s</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="game-screen" class="hidden fade-in">
+        <button type="button" onclick="leaveExam()" class="leave-exam"><span data-i18n="leave_exam">← Leave Exam</span></button>
+        <div id="question-box">
+          <div id="question-header" style="position: relative;">
+            <span id="question-number"></span>
+            <span id="question-points"></span>
+            <div id="timer">⏱ 60s</div>
+          </div>
+          <div id="question-text"></div>
+          <img id="question-image" class="hidden" alt="Question" />
+          <div id="answer-area"></div>
+          <div class="question-actions">
+            <button id="submit-answer" type="button" class="hidden" data-i18n="submit">✅ Submit</button>
+            <button type="button" id="bookmark-question" data-i18n="bookmark">🔖 Bookmark</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="profile-modal" class="hidden">
+      <div class="profile-modal-card">
+        <h2 data-i18n="update_profile">👤 Update Profile</h2>
+        <div class="profile-avatar-preview">
+          <img id="profile-avatar-preview-modal" src="" alt="Avatar Preview" />
+        </div>
+        <label for="profile-name" data-i18n="name_label">Name:</label>
+        <input type="text" id="profile-name" placeholder="Enter your name" data-placeholder="name_placeholder" />
+        <label for="avatar-upload" data-i18n="choose_avatar">Choose Avatar:</label>
+        <input type="file" id="avatar-upload" accept="image/*" />
+        <div class="profile-modal-actions">
+          <button id="save-profile-btn" type="button" onclick="saveProfile()" data-i18n="save">Save</button>
+          <button id="cancel-profile-btn" type="button" onclick="closeProfile()" data-i18n="cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script>
+    const SUPABASE_URL = 'https://rjxpwoafevepnjgjyizs.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJqeHB3b2FmZXZlcG5qZ2p5aXpzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgwOTI5MjEsImV4cCI6MjA2MzY2ODkyMX0.djnnZ4e1bQW0qT3kTnRPBX3wBEdvQ5LdHknvPxvrG38';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  </script>
+  <script src="translations.js"></script>
+  <script src="exam-data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

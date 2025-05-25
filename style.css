@@ -1,0 +1,672 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+/* Root Variables - Dark Mode Only */
+:root {
+  --bg-color: #181818;
+  --text-color: #eaeaea;
+  --card-bg: #232323;
+  --button-bg: #3399ff;
+  --button-hover: #1976d2;
+  --border-color: #555;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+/* Layout */
+body {
+  display: flex;
+  height: 100vh;
+  transition: all 0.3s ease;
+}
+#app {
+  display: flex;
+  width: 100%;
+}
+#main-content {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* Sidebar */
+#sidebar {
+  width: 240px;
+  background: var(--card-bg);
+  border-right: 1px solid var(--border-color);
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 2px 0 10px var(--shadow-color);
+}
+
+#sidebar-avatar {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid var(--button-bg);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+#sidebar-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(51, 153, 255, 0.6);
+}
+
+#sidebar-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+#sidebar-buttons button {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: var(--button-bg);
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+#sidebar-buttons button:hover {
+  background: var(--button-hover);
+}
+
+.tab-content {
+  display: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  flex: 1;
+  overflow: hidden;
+  padding-right: 8px;
+  flex-direction: column;
+}
+
+.tab-content.active {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-box {
+  overflow-y: auto;
+  max-height: 100%;
+  flex-grow: 1;
+  padding-right: 8px;
+}
+
+/* Tab Buttons */
+.tab-buttons {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.tab-buttons button {
+  margin: 0 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-color);
+  transition: background 0.2s;
+}
+.tab-buttons button.active {
+  background: var(--button-bg);
+  color: white;
+}
+.tab-buttons button:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+/* === Question UI === */
+#question-box {
+  background: var(--card-bg);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px var(--shadow-color);
+  padding: 30px;
+  width: 100%;
+  max-width: 800px;
+  height: 600px;
+  margin: 40px auto;
+  color: var(--text-color);
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#question-header {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+#question-text {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#question-number, #timer {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 10px;
+  color: var(--text-color);
+}
+
+#question-points {
+  position: absolute;
+  top: -65px; /* pushes it above the question box */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+#question-image {
+  max-width: 100%;
+  border-radius: 10px;
+  display: block;
+  margin: 20px auto;
+}
+
+/* Answer Area */
+#answer-area button,
+#submit-answer,
+#bookmark-question {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 14px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-color);
+  transition: 0.2s ease;
+}
+
+#answer-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+#answer-area button:hover,
+#submit-answer:hover,
+#bookmark-question:hover {
+  background: var(--button-bg);
+  color: white;
+  border-color: var(--button-bg);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px var(--shadow-color);
+}
+
+#answer-area input[type="text"] {
+  display: block;
+  margin: 0 auto 20px;
+  padding: 14px;
+  font-size: 16px;
+  width: 100%;
+  max-width: 800px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  text-align: center;
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+
+/* Submit Button Fade */
+#submit-answer {
+  display: none;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#submit-answer.visible {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Leave Exam Button */
+.leave-exam {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: #e53935;
+  color: white;
+  padding: 10px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+  z-index: 100;
+}
+.leave-exam:hover {
+  background: #c62828;
+  transform: scale(1.05);
+}
+
+/* === Exam Cards === */
+.exam-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  padding-right: 10px;
+  max-height: unset; /* ← Remove artificial height limit */
+  flex-grow: 1;       /* ← Allow it to fill remaining space */
+}
+
+.exam-card {
+  width: 100%;
+}
+
+.exam-card {
+  background: linear-gradient(to top right, var(--card-bg), #2c2c2c);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+.exam-card:hover {
+  transform: scale(1.00);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+}
+.exam-card strong {
+  font-size: 20px;
+  color: var(--button-bg);
+}
+.exam-card div {
+  font-size: 14px;
+  color: var(--text-color);
+  margin-top: 4px;
+}
+.exam-card button {
+  width: 100%;            /* or try 150px, 200px, etc. */
+  height: 40px;           /* increase to make taller */
+  font-size: 15px;
+  padding: 0;             /* optional: since height is set */
+  border-radius: 10px;
+  margin-top: 10px;
+  background: var(--button-bg);
+  color: white;
+  border: none;
+  transition: 0.3s ease;
+  cursor: pointer;
+}
+
+.exam-card button:hover {
+  background: var(--button-hover);
+}
+/* === Bookmarks Section === */
+.bookmark-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  padding-right: 10px;
+  max-height: unset;
+  flex-grow: 1;
+}
+
+/* General card style */
+.bookmark-grid .exam-card {
+  position: relative;
+  background: linear-gradient(to top right, var(--card-bg), #2c2c2c);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: cardFadeIn 0.4s ease-in;
+  min-height: 120px; /* Optional: ensure enough space for button */
+  align-items: center;
+  overflow: hidden; /* Prevent overflow causing scrollbar */
+}
+
+.bookmark-grid .exam-card:hover {
+  transform: scale(1.00);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.1);
+}
+
+/* Remove Button - Proper Bottom Right */
+.bookmark-grid .exam-card button {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: 0;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Remove tab ring */
+.bookmark-grid .exam-card button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Icon Styling */
+.bookmark-grid .exam-card button::before {
+  content: "❌";
+  font-size: 18px;
+  color: #ff4c4c;
+  display: block;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.bookmark-grid .exam-card button:hover::before {
+  color: #ff0000;
+  transform: scale(1.2);
+}
+
+/* === Profile Modal === */
+#profile-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+.profile-modal-card {
+  background: var(--card-bg);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 420px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: popIn 0.3s ease-in-out;
+}
+.profile-modal-card input[type="text"],
+.profile-modal-card input[type="file"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  margin: 10px 0 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--card-bg);
+  color: var(--text-color);
+}
+.profile-avatar-preview {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.profile-avatar-preview img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--button-bg);
+}
+.profile-modal-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.profile-modal-actions button {
+  flex: 1;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  transition: background 0.3s;
+}
+
+#save-profile-btn {
+  background: var(--button-bg);
+}
+#save-profile-btn:hover {
+  background: var(--button-hover);
+}
+
+#cancel-profile-btn {
+  background: #888;
+}
+#cancel-profile-btn:hover {
+  background: #666;
+}
+
+/* === Profile Stats – Enhanced Version === */
+
+#profile-time {
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-block;
+  min-width: 90px;
+  text-align: right;
+  color: #aaa;
+}
+
+/* Container */
+.profile-tab-modern {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  align-items: center;
+  width: auto;
+}
+
+/* Avatar */
+.profile-avatar-modern {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--button-bg);
+  box-shadow: 0 0 12px rgba(51, 153, 255, 0.4);
+  margin-bottom: 50px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.profile-avatar-modern:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 16px rgba(51, 153, 255, 0.6);
+}
+
+/* Name */
+.player-name {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: var(--button-bg);
+  letter-spacing: 0.5px;
+}
+
+/* Stats Grid */
+.profile-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  width: 100%;
+  padding-bottom: 10px;
+}
+
+/* Stat Card */
+.stat-card {
+  padding: 20px;
+  background: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-color);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.stat-card:hover {
+  background: #272727;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+/* Stat Label */
+.stat-card span {
+  font-size: 13px;
+  color: #bbb;
+  display: block;
+  margin-top: 6px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .profile-tab-modern {
+    padding: 24px 16px;
+    margin: 20px auto;
+  }
+
+  .profile-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+
+  .profile-avatar-modern {
+    width: 90px;
+    height: 90px;
+  }
+
+  .player-name {
+    font-size: 18px;
+  }
+}
+
+/* === Animation === */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.exam-card,
+.bookmark-grid .exam-card {
+  animation: cardFadeIn 0.4s ease-in;
+}
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+button, input, .exam-card, .stat-card, .tab-buttons button, .bookmark-grid .exam-card {
+  transition: all 0.3s ease;
+}
+#main-content {
+  scroll-behavior: smooth;
+}
+button:focus, input:focus {
+  outline: 2px solid var(--button-bg);
+  outline-offset: 2px;
+}
+
+.hidden {
+  display: none !important;
+}
+/* === Game Screen Fix === */
+#game-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Optional: make sure hidden/visible works right */
+.hidden {
+  display: none !important;
+}
+.visible {
+  display: block !important;
+}
+@media (max-width: 768px) {
+  #question-box {
+    height: auto;
+    max-height: 90vh;
+  }
+}
+
+.question-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+}
+
+#main-menu {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#tab-buttons {
+  position: sticky;
+  top: 0;
+  background: var(--bg-color);
+  z-index: 10;
+  padding: 10px 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
