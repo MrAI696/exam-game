@@ -56,7 +56,7 @@ function toggleLanguage() {
   document.documentElement.lang = newLang;
   document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
 
-  loadExams();        // Rebuild exams in new language
+  if (typeof loadExams === 'function') loadExams();
   showBookmarks();    // Update bookmark tab if open
   translatePage();    // Re-translate everything
 }
@@ -279,12 +279,17 @@ function showQuestion() {
   submitBtn.onclick = null;
 
   if (q.type === 'true_false') {
-    ['true', 'false'].forEach(opt => {
+    const lang = localStorage.getItem('lang') || 'en';
+    const trueLabel = lang === 'ar' ? 'صواب' : 'true';
+    const falseLabel = lang === 'ar' ? 'خطأ' : 'false';
+
+    [trueLabel, falseLabel].forEach(opt => {
       const btn = document.createElement('button');
       btn.textContent = opt;
       btn.onclick = () => submitAnswer(opt);
       answerArea.appendChild(btn);
     });
+
   } else if (q.type === 'multiple_choice') {
     getQuestionOptions(q).forEach(opt => {
       const btn = document.createElement('button');
@@ -292,11 +297,12 @@ function showQuestion() {
       btn.onclick = () => submitAnswer(opt);
       answerArea.appendChild(btn);
     });
+
   } else if (q.type === 'writing') {
     const input = document.createElement('input');
     input.type = 'text';
     input.id = 'written-answer';
-input.placeholder = translations?.[localStorage.getItem('lang') || 'en']?.writeAnswer || 'Type your answer';
+    input.placeholder = translations?.[localStorage.getItem('lang') || 'en']?.writeAnswer || 'Type your answer';
     answerArea.appendChild(input);
 
     submitBtn.onclick = async () => {
@@ -313,15 +319,15 @@ input.placeholder = translations?.[localStorage.getItem('lang') || 'en']?.writeA
     submitBtn.classList.add('visible');
   }
 
-document.getElementById('bookmark-question').onclick = () => {
-  if (bookmarks.includes(currentQuestionIndex)) {
-    alert(translations[localStorage.getItem('lang') || 'en']?.alreadyBookmarked || '❗ Already bookmarked!');
-  } else {
-    bookmarks.push(currentQuestionIndex);
-    saveBookmark(currentExam, currentQuestionIndex);
-    alert(translations[localStorage.getItem('lang') || 'en']?.bookmarked || 'Bookmarked!');
-  }
-};
+  document.getElementById('bookmark-question').onclick = () => {
+    if (bookmarks.includes(currentQuestionIndex)) {
+      alert(translations[localStorage.getItem('lang') || 'en']?.alreadyBookmarked || '❗ Already bookmarked!');
+    } else {
+      bookmarks.push(currentQuestionIndex);
+      saveBookmark(currentExam, currentQuestionIndex);
+      alert(translations[localStorage.getItem('lang') || 'en']?.bookmarked || 'Bookmarked!');
+    }
+  };
 
   document.getElementById('timer').textContent = '60s';
   timerInterval = setInterval(() => {
@@ -362,9 +368,24 @@ function leaveExam() {
 
 async function submitAnswer(answer) {
   const q = currentExam.questions[currentQuestionIndex];
-  if ((answer + '').toLowerCase().trim() === q.answer.toLowerCase().trim()) {
-    score += q.points;
+  const lang = localStorage.getItem('lang') || 'en';
+
+  // Get the correct answer based on language
+  let correctAnswer = lang === 'ar' && q.answer_ar ? q.answer_ar : q.answer;
+
+  const given = (answer + '').toLowerCase().trim();
+
+  if (Array.isArray(correctAnswer)) {
+    const correctAnswers = correctAnswer.map(a => (a + '').toLowerCase().trim());
+    if (correctAnswers.includes(given)) {
+      score += q.points;
+    }
+  } else {
+    if (given === (correctAnswer + '').toLowerCase().trim()) {
+      score += q.points;
+    }
   }
+
   await nextQuestion();
 }
 
