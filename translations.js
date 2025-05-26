@@ -1,4 +1,3 @@
-
 // translations.js
 
 const translations = {
@@ -39,7 +38,8 @@ const translations = {
     "reset_confirm": "Are you sure you want to reset all progress and bookmarks?",
     "progress_reset": "Progress reset!",
     "alreadyBookmarked": "This question is already bookmarked!",
-    "bookmarked": "Bookmarked!"
+    "bookmarked": "Bookmarked!",
+    "credits": "This Game Was Made By: Ali Al-Junibi / Mumil Al-Junibi"
   },
   ar: {
     "settings": "الإعدادات",
@@ -77,8 +77,9 @@ const translations = {
     "profile_updated": "تم تحديث الملف الشخصي!",
     "reset_confirm": "هل أنت متأكد أنك تريد إعادة تعيين جميع التقدم والإشارات المرجعية؟",
     "progress_reset": "تمت إعادة التقدم!",
-  "alreadyBookmarked": "هذا السؤال محفوظ بالفعل!",
-    "bookmarked": "تم الحفظ!"
+    "alreadyBookmarked": "هذا السؤال محفوظ بالفعل!",
+    "bookmarked": "تم الحفظ!",
+    "credits": "تم تطوير هذه اللعبة بواسطة: علي الجنيبي / مؤمل الجنيبي"
   }
 };
 
@@ -101,4 +102,3 @@ function toggleLanguage() {
   loadExams();       // 🔥 Rebuild exam cards in new language
   translatePage();   // 🔥 Update all translations (especially dynamic ones)
 }
-
